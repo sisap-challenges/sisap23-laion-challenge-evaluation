@@ -39,4 +39,10 @@ python3 eval/eval.py
 
 in your base repository. This produces a csv file `res.csv` that can be used for further processing.
 
+## Example
+
+See <https://github.com/sisap-challenges/sisap23-laion-challenge-faiss-example/> for an example usage. 
+In particular, take a look at the [CI integration](https://github.com/sisap-challenges/sisap23-laion-challenge-faiss-example/blob/master/.github/workflows/ci.yml).
+
+
 
