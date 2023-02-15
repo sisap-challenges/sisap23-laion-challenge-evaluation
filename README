@@ -1,0 +1,42 @@
+# Evaluation script for SISAP 23 LAION2B Challenge 
+
+This repository contains tools to evaluate implementations participating in the [SISAP 2023 LAION2B Challenge](https://sisap-challenges.github.io/).
+
+## Adding into your repository
+
+Run `git submodule add https://github.com/sisap-challenges/sisap23-laion-challenge-evaluation eval` in your repository.
+Make sure to check out submodules in GHA as well. This can be achieved by adding
+```
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+```
+to your steps.
+
+## Expected file format
+
+Results are stored in an hdf5 file (suffix `.h5`) in `results`.
+
+The following attributes should be present in the [hdf5 attributes](https://docs.h5py.org/en/stable/high/attr.html).
+
+- **data**: hamming, pca32, pca96
+- **size**: "100K", "1M", "10M", "100M" 
+- **algo**: easily identifiable string for your implementation, e.g., "faissIVF"
+- **buildtime**: time in seconds needed to build the index
+- **querytime**: time in seconds needed to answer all queries
+- **params**: hyperparameter description
+
+Two groups **knns** for identifiers and **dists** for distances.
+
+## Evaluation
+
+Run 
+
+```python
+
+python3 eval/eval.py
+```
+
+in your base repository. This produces a csv file `res.csv` that can be used for further processing.
+
+
