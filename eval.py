@@ -33,7 +33,6 @@ def get_recall(I, gt, k):
     assert k <= I.shape[1]
     assert len(I) == len(gt)
 
-    I = I + 1 # our groundtruth is 1-indexed, FAISS is 0-indexed
     n = len(I)
     recall = 0
     for i in range(n):
