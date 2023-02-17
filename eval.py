@@ -12,10 +12,17 @@ def download(src, dst):
         urlretrieve(src, dst)
 
 def get_groundtruth(size="100K"):
-    url = f"http://ingeotec.mx/~sadit/metric-datasets/LAION/SISAP23-Challenge/public-queries/en-gold-standard-public/small-laion2B-en-public-gold-standard-{size}.h5"
+    if size == "100K" or size == "300K":
+        url = f"http://ingeotec.mx/~sadit/metric-datasets/LAION/SISAP23-Challenge/public-queries/en-gold-standard-public/small-laion2B-en-public-gold-standard-{size}.h5"
+    else:
+        url = f"http://ingeotec.mx/~sadit/metric-datasets/LAION/SISAP23-Challenge/public-queries/en-gold-standard-public/laion2B-en-public-gold-standard-{size}.h5"
+
     out_fn = os.path.join("data", f"groundtruth-{size}.h5")
     download(url, out_fn)
-    return out_fn
+    gt_f = h5py.File(out_fn, "r")
+    true_I = np.array(gt_f['knns'])
+    gt_f.close()
+    return true_I
 
 def get_all_results(dirname):
     for root, _, files in os.walk(dirname):
@@ -40,10 +47,7 @@ def get_recall(I, gt, k):
     return recall / (n * k)
 
 if __name__ == "__main__":
-    gt_fn = get_groundtruth()
-    gt_f = h5py.File(gt_fn, "r")
-    true_I = np.array(gt_f['knns'])
-    gt_f.close()
+    true_I_cache = {}
 
     columns = ["data", "size", "algo", "buildtime", "querytime", "params", "recall"]
     
@@ -51,7 +55,10 @@ if __name__ == "__main__":
         writer = csv.DictWriter(csvfile, fieldnames=columns)
         writer.writeheader()
         for res in get_all_results("result"):
-            recall = get_recall(np.array(res["knns"]), true_I, 30)
+            size = res.attrs["size"]
+            if size not in true_I_cache:
+                true_I_cache[size] = get_groundtruth(size)
+            recall = get_recall(np.array(res["knns"]), true_I_cache[size], 10)
             d = dict(res.attrs)
             d['recall'] = recall
             print(d["data"], d["algo"], d["params"], "=>", recall)

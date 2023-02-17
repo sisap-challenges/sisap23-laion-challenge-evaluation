@@ -1,4 +1,5 @@
 # This is based on https://github.com/matsui528/annbench/blob/main/plot.py
+import argparse
 import csv
 import matplotlib
 matplotlib.use('agg')
@@ -62,16 +63,22 @@ def get_pareto_frontier(line):
     return line
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print(f"Usage: ./{sys.argv[1]} <path-to-csv>")
-        sys.exit(-1)
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--size",
+        default="100K"
+    )
+    parser.add_argument("csvfile")
+    args = parser.parse_args()
     
-    with open(sys.argv[1], newline="") as csvfile:
+    with open(args.csvfile, newline="") as csvfile:
         reader = csv.DictReader(csvfile)
         data = list(reader)
     
     lines = {}
     for res in data:
+        if res["size"] != args.size:
+            continue
         dataset = res["data"]
         algo = res["algo"]
         label = dataset + algo
@@ -90,4 +97,5 @@ if __name__ == "__main__":
             run_identifier = res["params"]
         lines[label]["ctrls"].append(run_identifier)
     
-    draw([get_pareto_frontier(line) for line in lines.values()], "Recall", "QPS (1/s)", "Result", "result.png", True, 10, 8)
+    draw([get_pareto_frontier(line) for line in lines.values()], 
+            "Recall", "QPS (1/s)", "Result", f"result_{args.size}.png", True, 10, 8)
