@@ -13,9 +13,9 @@ def download(src, dst):
 
 def get_groundtruth(size="100K"):
     if size == "100K" or size == "300K":
-        url = f"http://ingeotec.mx/~sadit/metric-datasets/LAION/SISAP23-Challenge/public-queries/en-gold-standard-public/small-laion2B-en-public-gold-standard-{size}.h5"
+        url = f"https://sisap-23-challenge.s3.amazonaws.com/SISAP23-Challenge/public-queries/en-gold-standard-public/small-laion2B-en-public-gold-standard-{size}.h5"
     else:
-        url = f"http://ingeotec.mx/~sadit/metric-datasets/LAION/SISAP23-Challenge/public-queries/en-gold-standard-public/laion2B-en-public-gold-standard-{size}.h5"
+        url = f"https://sisap-23-challenge.s3.amazonaws.com/SISAP23-Challenge/public-queries/en-gold-standard-public/laion2B-en-public-gold-standard-{size}.h5"
 
     out_fn = os.path.join("data", f"groundtruth-{size}.h5")
     download(url, out_fn)
