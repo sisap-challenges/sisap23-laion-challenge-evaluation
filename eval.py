@@ -40,7 +40,7 @@ def get_recall(I, gt, k):
     n = len(I)
     recall = 0
     for i in range(n):
-        recall += len(set(I[i]) & set(gt[i, :k]))
+        recall += len(set(I[i, :k]) & set(gt[i, :k]))
     return recall / (n * k)
 
 def return_h5_str(f, param):
