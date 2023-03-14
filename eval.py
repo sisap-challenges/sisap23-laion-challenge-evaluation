@@ -12,7 +12,8 @@ def download(src, dst):
         urlretrieve(src, dst)
 
 def get_groundtruth(size="100K"):
-    url = f"http://ingeotec.mx/~sadit/metric-datasets/LAION/SISAP23-Challenge/laion2B-en-public-gold-standard-v2-{size}.h5"
+    #url = f"http://ingeotec.mx/~sadit/metric-datasets/LAION/SISAP23-Challenge/laion2B-en-public-gold-standard-v2-{size}.h5"
+    url = f"https://sisap-23-challenge.s3.amazonaws.com/SISAP23-Challenge/laion2B-en-public-gold-standard-v2-{size}.h5"
 
     out_fn = os.path.join("data", f"groundtruth-{size}.h5")
     download(url, out_fn)
